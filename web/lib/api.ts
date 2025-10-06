@@ -84,7 +84,7 @@ export async function getProfile() {
   try {
     const response = await fetch(`${backendUrl}/profile`, {
       method: "GET",
-      headers: getHeaders(true), // Auth needed for profile
+      headers: getHeaders(true),
     });
     return await response.json();
   } catch (error) {

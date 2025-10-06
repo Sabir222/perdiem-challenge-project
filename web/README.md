@@ -1,4 +1,38 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Perdiemin Frontend Documentation
+
+## Pages Implementation
+
+The frontend application includes these main pages:
+
+- **Home Page** (`app/page.tsx`): Displays store-specific information with dynamic theming
+- **Login Page** (`app/login/page.tsx`): Authentication for existing users
+- **Signup Page** (`app/signup/page.tsx`): User registration with store-specific accounts
+- **Profile Page** (`app/profile/page.tsx`): Protected page showing user information
+
+## State Management
+
+The application uses React Context for global state management:
+
+- **Store Context** (`lib/contexts/StoreContext.tsx`): Manages store information (name, theme, slug) across the app
+- Provides loading and error states
+- Automatically updates based on current subdomain
+
+## API Integration
+
+API helper functions in `web/lib/api.ts` provide:
+
+- Subdomain handling for multi-tenant routing
+- Authentication functions (signup, login, getProfile, logout)
+- Store information fetching
+- JWT token management in localStorage
+- Error handling for network requests
+
+## Multi-Tenant Features
+
+- Dynamic subdomain detection (a.localhost:3000, b.localhost:3000, etc.)
+- Store-specific theming with color schemes
+- Isolated user accounts per store
+- Subdomain-aware authentication
 
 ## Getting Started
 
@@ -15,22 +49,3 @@ bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
