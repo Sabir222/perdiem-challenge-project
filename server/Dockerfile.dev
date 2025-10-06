@@ -1,0 +1,23 @@
+# Use the official Node.js 20 image as the base image
+FROM node:20-alpine
+
+# Install pnpm globally
+RUN npm install -g pnpm
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy package files
+COPY server/package.json server/pnpm-lock.yaml ./
+
+# Install dependencies using pnpm
+RUN pnpm install --frozen-lockfile
+
+# Copy the rest of the application code
+COPY server/ .
+
+# Expose the port the app runs on
+EXPOSE 4000
+
+# Define the command to run the application in development mode
+CMD ["pnpm", "run", "dev"]
