@@ -16,6 +16,7 @@ router.get("/", async (req, res) => {
     name: req.currentStore.name,
     slug: req.currentStore.slug,
     welcome_message: req.currentStore.welcome_message,
+    theme: req.currentStore.theme,
   });
 });
 

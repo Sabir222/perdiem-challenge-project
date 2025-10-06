@@ -34,57 +34,67 @@ export default function Signup() {
         };
 
         return (
-                <div className="flex items-center justify-center min-h-screen">
-                        <div className="w-full max-w-md p-8 space-y-6 bg-white dark:bg-gray-800 rounded-lg shadow">
-                                <h1 className="text-2xl font-bold text-center">Sign Up</h1>
+                <div className="min-h-screen flex flex-col">
+                        {/* Theme banner - will be updated dynamically if we can access store theme */}
+                        <div className="h-3 w-full bg-blue-500"></div>
+                        
+                        <div className="flex-grow flex items-center justify-center bg-gray-50 p-4">
+                                <div className="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden">
+                                        <div className="p-8">
+                                                <div className="text-center">
+                                                        <h1 className="text-3xl font-bold text-gray-900 mb-2">Create Account</h1>
+                                                        <p className="text-gray-500">Sign up to get started</p>
+                                                </div>
 
-                                {error && <div className="text-red-500 text-center">{error}</div>}
+                                                {error && <div className="mt-4 p-3 bg-red-50 text-red-700 rounded-md text-center">{error}</div>}
 
-                                <form onSubmit={handleSubmit} className="space-y-4">
-                                        <div>
-                                                <label htmlFor="email" className="block text-sm font-medium mb-1">
-                                                        Email
-                                                </label>
-                                                <input
-                                                        id="email"
-                                                        type="email"
-                                                        value={email}
-                                                        onChange={(e) => setEmail(e.target.value)}
-                                                        required
-                                                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-indigo-200"
-                                                />
+                                                <form onSubmit={handleSubmit} className="mt-6 space-y-5">
+                                                        <div>
+                                                                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                                                                        Email address
+                                                                </label>
+                                                                <input
+                                                                        id="email"
+                                                                        type="email"
+                                                                        value={email}
+                                                                        onChange={(e) => setEmail(e.target.value)}
+                                                                        required
+                                                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                                                                />
+                                                        </div>
+
+                                                        <div>
+                                                                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                                                                        Password
+                                                                </label>
+                                                                <input
+                                                                        id="password"
+                                                                        type="password"
+                                                                        value={password}
+                                                                        onChange={(e) => setPassword(e.target.value)}
+                                                                        required
+                                                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                                                                />
+                                                        </div>
+
+                                                        <button
+                                                                type="submit"
+                                                                disabled={loading}
+                                                                className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-md transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                        >
+                                                                {loading ? 'Creating account...' : 'Create Account'}
+                                                        </button>
+                                                </form>
+
+                                                <div className="mt-6 text-center text-sm">
+                                                        <p className="text-gray-600">
+                                                                Already have an account?{' '}
+                                                                <Link href="/login" className="font-semibold text-blue-600 hover:text-blue-500 transition">
+                                                                Sign in
+                                                        </Link>
+                                                        </p>
+                                                </div>
                                         </div>
-
-                                        <div>
-                                                <label htmlFor="password" className="block text-sm font-medium mb-1">
-                                                        Password
-                                                </label>
-                                                <input
-                                                        id="password"
-                                                        type="password"
-                                                        value={password}
-                                                        onChange={(e) => setPassword(e.target.value)}
-                                                        required
-                                                        className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-indigo-200"
-                                                />
-                                        </div>
-
-                                        <button
-                                                type="submit"
-                                                disabled={loading}
-                                                className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
-                                        >
-                                                {loading ? 'Creating account...' : 'Sign Up'}
-                                        </button>
-                                </form>
-
-                                <div className="text-center text-sm">
-                                        <p>
-                                                Already have an account?{' '}
-                                                <Link href="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
-                                                        Login
-                                                </Link>
-                                        </p>
                                 </div>
                         </div>
                 </div>
