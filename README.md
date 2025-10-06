@@ -1,6 +1,34 @@
-# Backend Setup
+# challenge Setup
 
-## Setup
+## Frontend Setup
+
+1. **Navigate to frontend directory**:
+
+   ```bash
+   cd ../web
+   ```
+
+2. **Install dependencies**:
+
+   ```bash
+   pnpm install
+   ```
+
+3. **Start the frontend**:
+   ```bash
+   pnpm run dev
+   ```
+
+Frontend will run on `http://localhost:3000`
+
+## Accessing the Application
+
+Visit `http://localhost:3000` and select a store to begin:
+
+- Store A: `http://a.localhost:3000`
+- Store B: `http://b.localhost:3000`
+
+## backend Setup
 
 1. **Start databases**:
    ```bash
@@ -81,5 +109,3 @@ The migration creates 3 stores by default:
 
 - Store A with subdomain `a.localhost:4000`
 - Store B with subdomain `b.localhost:4000`
-- Store C with subdomain `c.localhost:4000`
-
