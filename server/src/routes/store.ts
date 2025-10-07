@@ -3,6 +3,9 @@ import bcrypt from "bcrypt";
 import { authenticateUser } from "../auth";
 import { userService } from "../services";
 import { generateToken } from "../utils/auth";
+import { signupSchema, SignupRequest } from "../validation/signup";
+import { loginSchema, LoginRequest } from "../validation/login";
+import { validate } from "../validation/middleware";
 
 const router = Router();
 
@@ -20,16 +23,12 @@ router.get("/", async (req, res) => {
   });
 });
 
-router.post("/signup", async (req, res) => {
+router.post("/signup", validate(signupSchema), async (req, res) => {
   if (!req.currentStore) {
     return res.status(404).json({ error: "Store not found" });
   }
 
   const { email, password } = req.body;
-
-  if (!email || !password) {
-    return res.status(400).json({ error: "Email and password are required" });
-  }
 
   try {
     const user = await userService.createUser(
@@ -56,16 +55,12 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-router.post("/login", async (req, res) => {
+router.post("/login", validate(loginSchema), async (req, res) => {
   if (!req.currentStore) {
     return res.status(404).json({ error: "Store not found" });
   }
 
   const { email, password } = req.body;
-
-  if (!email || !password) {
-    return res.status(400).json({ error: "Email and password are required" });
-  }
 
   try {
     const user = await userService.getUserByEmailAndStore(

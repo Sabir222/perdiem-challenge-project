@@ -35,7 +35,7 @@ describe("Multi-Tenant Isolation", () => {
     const signupA = await request(app)
       .post("/signup")
       .set("Host", "a.localhost:4000")
-      .send({ email: "usera@test.com", password: "password123" });
+      .send({ email: "usera@test.com", password: "Password123!" });
 
     storeAToken = signupA.body.token;
     storeAUserId = signupA.body.user.id;
@@ -43,7 +43,7 @@ describe("Multi-Tenant Isolation", () => {
     const signupB = await request(app)
       .post("/signup")
       .set("Host", "b.localhost:4000")
-      .send({ email: "userb@test.com", password: "password123" });
+      .send({ email: "userb@test.com", password: "Password123!" });
 
     storeBToken = signupB.body.token;
     storeBUserId = signupB.body.user.id;
