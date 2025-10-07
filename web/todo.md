@@ -1,0 +1,4 @@
+- zod form validation
+- dark/light mode
+- better ux/ui
+- better error handling

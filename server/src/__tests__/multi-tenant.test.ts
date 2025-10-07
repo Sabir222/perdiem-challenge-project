@@ -7,6 +7,7 @@ import storeRoutes from "../routes/store";
 import { generateToken } from "../utils/auth";
 import pool from "../db/connection";
 
+// run test app
 const app = express();
 app.use(cors());
 app.use(express.json());

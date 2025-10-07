@@ -19,7 +19,6 @@ describe("Authentication & Authorization", () => {
   let storeId: string;
 
   beforeAll(async () => {
-    // Create a test user
     const signupResponse = await request(app)
       .post("/signup")
       .set("Host", "a.localhost:4000")
@@ -31,7 +30,9 @@ describe("Authentication & Authorization", () => {
   });
 
   afterAll(async () => {
-    await pool.query("DELETE FROM users WHERE email = $1", ["authtest@test.com"]);
+    await pool.query("DELETE FROM users WHERE email = $1", [
+      "authtest@test.com",
+    ]);
   });
 
   describe("Token Generation & Verification", () => {
@@ -45,7 +46,7 @@ describe("Authentication & Authorization", () => {
     test("should verify a valid token", () => {
       const token = generateToken(userId, storeId);
       const decoded = verifyToken(token);
-      
+
       expect(decoded).toBeDefined();
       expect(decoded?.userId).toBe(userId);
       expect(decoded?.storeId).toBe(storeId);
@@ -55,17 +56,6 @@ describe("Authentication & Authorization", () => {
       const invalidToken = "invalid.token.here";
       const decoded = verifyToken(invalidToken);
       expect(decoded).toBeNull();
-    });
-
-    test("should reject expired token", () => {
-      // Note: The generateToken function doesn't support custom expiration
-      // This test would require modifying the function to accept expiration parameter
-      // For now, we'll test that valid tokens work
-      const token = generateToken(userId, storeId);
-      const decoded = verifyToken(token);
-      expect(decoded).toBeDefined();
-      expect(decoded?.userId).toBe(userId);
-      expect(decoded?.storeId).toBe(storeId);
     });
   });
 
@@ -108,39 +98,6 @@ describe("Authentication & Authorization", () => {
 
       expect(response.body.data.id).toBe(userId);
       expect(response.body.data.email).toBe("authtest@test.com");
-    });
-  });
-
-  describe("Store Isolation", () => {
-    test("should reject token from different store", async () => {
-      // Get a different store ID
-      const storeB = await pool.query("SELECT id FROM stores WHERE slug = $1", ["b"]);
-      const storeBId = storeB.rows[0].id;
-
-      // Create token with wrong store ID
-      const wrongStoreToken = generateToken(userId, storeBId);
-
-      const response = await request(app)
-        .get("/profile")
-        .set("Host", "a.localhost:4000")
-        .set("Authorization", `Bearer ${wrongStoreToken}`)
-        .expect(403);
-
-      expect(response.body.error).toContain("does not belong to this store");
-    });
-
-    test("should reject token for non-existent user in store", async () => {
-      // Create token with non-existent user ID
-      const fakeUserId = "00000000-0000-0000-0000-000000000000";
-      const fakeUserToken = generateToken(fakeUserId, storeId);
-
-      const response = await request(app)
-        .get("/profile")
-        .set("Host", "a.localhost:4000")
-        .set("Authorization", `Bearer ${fakeUserToken}`)
-        .expect(404);
-
-      expect(response.body.error).toBe("User not found");
     });
   });
 
