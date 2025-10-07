@@ -14,9 +14,22 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   // Initialize theme from store info if available
   useEffect(() => {
-    // In a real implementation, you might fetch theme from store info
-    // For now, we'll keep the default or allow updates via setThemeColor
+    // Sync CSS custom properties so Tailwind styles can consume runtime theme color
+    if (typeof document !== 'undefined') {
+      document.documentElement.style.setProperty('--brand', themeColor);
+      // Compute readable on-brand and soft variants
+      // Fallbacks are fine; designers can refine later
+      document.documentElement.style.setProperty('--brand-foreground', '#ffffff');
+      document.documentElement.style.setProperty('--brand-soft', themeColor + '20');
+    }
   }, []);
+
+  // Reflect updates to themeColor at runtime
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.documentElement.style.setProperty('--brand', themeColor);
+    }
+  }, [themeColor]);
 
   const value = {
     themeColor,

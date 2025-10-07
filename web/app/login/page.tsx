@@ -5,6 +5,9 @@ import { useAuth } from '@/lib/contexts/AuthContext';
 import { useTheme } from '@/lib/contexts/ThemeContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Card from '@/app/components/Card';
+import Input from '@/app/components/Input';
+import Button from '@/app/components/Button';
 
 export default function Login() {
         const [email, setEmail] = useState('');
@@ -37,87 +40,37 @@ export default function Login() {
         };
 
         return (
-                <div className="min-h-screen flex flex-col">
-                        <div 
-                                className="h-3 w-full" 
-                                style={{ backgroundColor: themeColor }}
-                        ></div>
-                        
-                        <div className="flex-grow flex items-center justify-center bg-gray-50 p-4">
-                                <div className="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden">
-                                        <div className="p-8">
-                                                <div className="text-center">
-                                                        <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
-                                                        <p className="text-gray-500">Sign in to your account</p>
-                                                </div>
-
-                                                {error && <div className="mt-4 p-3 bg-red-50 text-red-700 rounded-md text-center">{error}</div>}
-
-                                                <form onSubmit={handleSubmit} className="mt-6 space-y-5">
-                                                        <div>
-                                                                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                                                                        Email address
-                                                                </label>
-                                                                <input
-                                                                        id="email"
-                                                                        type="email"
-                                                                        value={email}
-                                                                        onChange={(e) => setEmail(e.target.value)}
-                                                                        required
-                                                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                                                                />
-                                                        </div>
-
-                                                        <div>
-                                                                <div className="flex items-center justify-between mb-1">
-                                                                        <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                                                                                Password
-                                                                        </label>
-                                                                </div>
-                                                                <input
-                                                                        id="password"
-                                                                        type="password"
-                                                                        value={password}
-                                                                        onChange={(e) => setPassword(e.target.value)}
-                                                                        required
-                                                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                                                                />
-                                                        </div>
-
-                                                        <button
-                                                                type="submit"
-                                                                disabled={loading}
-                                                                className="w-full py-3 px-4 text-white font-medium rounded-lg shadow-md transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                                                                style={{ backgroundColor: themeColor, borderColor: themeColor }}
-                                                        >
-                                                                {loading ? 'Signing in...' : 'Sign In'}
-                                                        </button>
-                                                </form>
-
-                                                <div className="mt-6 text-center text-sm space-y-2">
-                                                        <p className="text-gray-600">
-                                                                Don&apos;t have an account?{' '}
-                                                                <Link 
-                                                                        href="/signup" 
-                                                                        className="font-semibold transition"
-                                                                        style={{ color: themeColor }}
-                                                                >
-                                                                        Sign up
-                                                                </Link>
-                                                        </p>
-                                                        <p className="text-gray-600">
-                                                                <Link 
-                                                                        href="/" 
-                                                                        className="font-semibold transition"
-                                                                        style={{ color: themeColor }}
-                                                                >
-                                                                        &larr; Back to Home
-                                                                </Link>
-                                                        </p>
-                                                </div>
-                                        </div>
+                <div className="py-16">
+                        <Card className="w-full max-w-md mx-auto">
+                                <div className="text-center">
+                                        <h1 className="text-3xl font-bold mb-2">Welcome Back</h1>
+                                        <p style={{ color: 'var(--muted-foreground)' }}>Sign in to your account</p>
                                 </div>
-                        </div>
+
+                                {error && <div className="mt-4 p-3 bg-red-50 text-red-700 rounded-md text-center">{error}</div>}
+
+                                <form onSubmit={handleSubmit} className="mt-6 space-y-5">
+                                        <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required label="Email address" />
+                                        <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required label="Password" />
+                                        <Button type="submit" disabled={loading} fullWidth>
+                                                {loading ? 'Signing in...' : 'Sign In'}
+                                        </Button>
+                                </form>
+
+                                <div className="mt-6 text-center text-sm space-y-2">
+                                        <p style={{ color: 'var(--muted-foreground)' }}>
+                                                Don&apos;t have an account?{' '}
+                                                <Link href="/signup" className="font-semibold" style={{ color: 'var(--brand)' }}>
+                                                        Sign up
+                                                </Link>
+                                        </p>
+                                        <p style={{ color: 'var(--muted-foreground)' }}>
+                                                <Link href="/" className="font-semibold" style={{ color: 'var(--brand)' }}>
+                                                        &larr; Back to Home
+                                                </Link>
+                                        </p>
+                                </div>
+                        </Card>
                 </div>
         );
 }
