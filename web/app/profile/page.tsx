@@ -2,16 +2,21 @@
 
 import { useState, useEffect } from 'react';
 import { getProfile } from '@/lib/api';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '@/lib/contexts/AuthContext';
+import { useTheme } from '@/lib/contexts/ThemeContext';
+import { User } from '@/lib/types';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Card from '@/app/components/Card';
+import Button from '@/app/components/Button';
 
 export default function Profile() {
-        const [profile, setProfile] = useState<any>(null);
+        const [profile, setProfile] = useState<User | null>(null);
         const [loading, setLoading] = useState(true);
         const [error, setError] = useState('');
 
         const { user, loading: authLoading } = useAuth();
+        const { themeColor } = useTheme();
         const router = useRouter();
 
         useEffect(() => {
@@ -38,7 +43,11 @@ export default function Profile() {
         }, [user, authLoading, router]);
 
         if (authLoading || loading) {
-                return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+                return (
+                        <div className="flex items-center justify-center py-24">
+                                <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2" style={{ borderColor: 'var(--brand)' }}></div>
+                        </div>
+                );
         }
 
         if (error) {
@@ -59,38 +68,28 @@ export default function Profile() {
         }
 
         return (
-                <div className="font-sans min-h-screen p-8 pb-20 gap-16 sm:p-20">
-                        <main className="max-w-2xl mx-auto">
-                                <h1 className="text-3xl font-bold mb-8 text-center">User Profile</h1>
-
-                                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
-                                        <div className="grid grid-cols-1 gap-4">
-                                                <div>
-                                                        <h2 className="text-lg font-semibold text-gray-500">Email</h2>
-                                                        <p className="text-xl">{profile?.email || user.email}</p>
-                                                </div>
-
-                                                <div>
-                                                        <h2 className="text-lg font-semibold text-gray-500">User ID</h2>
-                                                        <p className="text-xl">{profile?.id || user.id}</p>
-                                                </div>
-
-                                                <div>
-                                                        <h2 className="text-lg font-semibold text-gray-500">Store ID</h2>
-                                                        <p className="text-xl">{profile?.store_id || user.store_id}</p>
-                                                </div>
+                <div className="py-16">
+                        <h1 className="text-3xl font-bold mb-8 text-center">User Profile</h1>
+                        <Card className="max-w-2xl mx-auto mb-6">
+                                <div className="grid grid-cols-1 gap-4">
+                                        <div>
+                                                <h2 className="text-sm font-semibold" style={{ color: 'var(--muted-foreground)' }}>Email</h2>
+                                                <p className="text-lg">{profile?.email || user.email}</p>
+                                        </div>
+                                        <div>
+                                                <h2 className="text-sm font-semibold" style={{ color: 'var(--muted-foreground)' }}>User ID</h2>
+                                                <p className="text-lg">{profile?.id || user.id}</p>
+                                        </div>
+                                        <div>
+                                                <h2 className="text-sm font-semibold" style={{ color: 'var(--muted-foreground)' }}>Store ID</h2>
+                                                <p className="text-lg">{profile?.store_id || user.store_id}</p>
                                         </div>
                                 </div>
+                        </Card>
 
-                                <div className="flex justify-center">
-                                        <Link
-                                                href="/"
-                                                className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm h-10 px-6"
-                                        >
-                                                Back to Home
-                                        </Link>
-                                </div>
-                        </main>
+                        <div className="flex justify-center">
+                                <Link href="/" className="btn btn-primary">Back to Home</Link>
+                        </div>
                 </div>
         );
 }
