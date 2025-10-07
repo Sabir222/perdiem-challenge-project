@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import helmet from "helmet";
 import dotenv from "dotenv";
 import { extractStoreFromSubdomain } from "./middleware";
 import storeRoutes from "./routes/store";
@@ -12,6 +13,7 @@ const PORT = parseInt(process.env.PORT || "4000");
 
 redisClient.connect();
 
+app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
