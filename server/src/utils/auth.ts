@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET || "fallback-secret-key";
+const JWT_SECRET = process.env.JWT_SECRET || "fallback-secret-key"; // we need to remove this not secure , only for dev now
 
 interface TokenPayload {
   userId: string;
@@ -21,4 +21,3 @@ export function verifyToken(token: string): TokenPayload | null {
     return null;
   }
 }
-
