@@ -6,26 +6,27 @@ import { generateToken } from "../utils/auth";
 import { signupSchema, SignupRequest } from "../validation/signup";
 import { loginSchema, LoginRequest } from "../validation/login";
 import { validate } from "../validation/middleware";
+import { sendSuccess, sendError } from "../utils/responseHandler";
 
 const router = Router();
 
 router.get("/", async (req, res) => {
   if (!req.currentStore) {
-    return res.status(404).json({ error: "Store not found" });
+    return sendError(res, "Store not found", "STORE_NOT_FOUND", 404);
   }
 
-  res.json({
+  return sendSuccess(res, {
     id: req.currentStore.id,
     name: req.currentStore.name,
     slug: req.currentStore.slug,
     welcome_message: req.currentStore.welcome_message,
     theme: req.currentStore.theme,
-  });
+  }, "Store retrieved successfully");
 });
 
 router.post("/signup", validate(signupSchema), async (req, res) => {
   if (!req.currentStore) {
-    return res.status(404).json({ error: "Store not found" });
+    return sendError(res, "Store not found", "STORE_NOT_FOUND", 404);
   }
 
   const { email, password } = req.body;
@@ -39,25 +40,22 @@ router.post("/signup", validate(signupSchema), async (req, res) => {
 
     const token = generateToken(user.id, user.store_id);
 
-    res.status(201).json({
-      message: "User created successfully",
+    return sendSuccess(res, {
       token,
       user: { id: user.id, email: user.email, store_id: user.store_id },
-    });
+    }, "User created successfully", 201);
   } catch (error: any) {
     //duplicate email error code
     if (error.code === "23505") {
-      return res
-        .status(409)
-        .json({ error: "Email already exists in this store" });
+      return sendError(res, "Email already exists in this store", "EMAIL_EXISTS", 409);
     }
-    res.status(500).json({ error: "Failed to create user" });
+    return sendError(res, "Failed to create user", "CREATE_USER_ERROR", 500);
   }
 });
 
 router.post("/login", validate(loginSchema), async (req, res) => {
   if (!req.currentStore) {
-    return res.status(404).json({ error: "Store not found" });
+    return sendError(res, "Store not found", "STORE_NOT_FOUND", 404);
   }
 
   const { email, password } = req.body;
@@ -69,46 +67,45 @@ router.post("/login", validate(loginSchema), async (req, res) => {
     );
 
     if (!user) {
-      return res.status(401).json({ error: "Invalid credentials" });
+      return sendError(res, "Invalid credentials", "INVALID_CREDENTIALS", 401);
     }
 
     const isValidPassword = await bcrypt.compare(password, user.password);
 
     if (!isValidPassword) {
-      return res.status(401).json({ error: "Invalid credentials" });
+      return sendError(res, "Invalid credentials", "INVALID_CREDENTIALS", 401);
     }
 
     const token = generateToken(user.id, user.store_id);
 
-    res.json({
-      message: "Login successful",
+    return sendSuccess(res, {
       token,
       user: { id: user.id, email: user.email, store_id: user.store_id },
-    });
+    }, "Login successful");
   } catch (error) {
-    res.status(500).json({ error: "Login failed" });
+    return sendError(res, "Login failed", "LOGIN_ERROR", 500);
   }
 });
 
 router.get("/profile", authenticateUser, async (req, res) => {
   if (!req.userId || !req.storeId) {
-    return res.status(401).json({ error: "Authentication required" });
+    return sendError(res, "Authentication required", "AUTH_REQUIRED", 401);
   }
 
   try {
     const user = await userService.getUserByIdAndStore(req.userId, req.storeId);
 
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return sendError(res, "User not found", "USER_NOT_FOUND", 404);
     }
 
-    res.json({
+    return sendSuccess(res, {
       id: user.id,
       email: user.email,
       store_id: user.store_id,
-    });
+    }, "User profile retrieved successfully");
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch user profile" });
+    return sendError(res, "Failed to fetch user profile", "FETCH_PROFILE_ERROR", 500);
   }
 });
 

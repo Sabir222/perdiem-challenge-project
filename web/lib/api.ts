@@ -39,7 +39,13 @@ export async function getStoreInfo() {
       method: "GET",
       headers: getHeaders(false),
     });
-    return await response.json();
+    const result = await response.json();
+    
+    if (response.ok) {
+      return result.data; // Return the actual data from the success response
+    } else {
+      throw new Error(result.error || 'Failed to fetch store info');
+    }
   } catch (error) {
     console.error("Error fetching store info:", error);
     throw error;
@@ -55,10 +61,16 @@ export async function signup(email: string, password: string) {
       headers: getHeaders(false),
       body: JSON.stringify({ email, password }),
     });
-    return await response.json();
+    const result = await response.json();
+    
+    if (response.ok) {
+      return { ...result.data, success: true, message: result.message }; // Return data with success flag
+    } else {
+      return { success: false, error: result.error, message: result.message };
+    }
   } catch (error) {
     console.error("Error during signup:", error);
-    throw error;
+    return { success: false, error: 'Network error' };
   }
 }
 
@@ -71,10 +83,16 @@ export async function login(email: string, password: string) {
       headers: getHeaders(false),
       body: JSON.stringify({ email, password }),
     });
-    return await response.json();
+    const result = await response.json();
+    
+    if (response.ok) {
+      return { ...result.data, success: true, message: result.message }; // Return data with success flag
+    } else {
+      return { success: false, error: result.error, message: result.message };
+    }
   } catch (error) {
     console.error("Error during login:", error);
-    throw error;
+    return { success: false, error: 'Network error' };
   }
 }
 
@@ -86,7 +104,13 @@ export async function getProfile() {
       method: "GET",
       headers: getHeaders(true),
     });
-    return await response.json();
+    const result = await response.json();
+    
+    if (response.ok) {
+      return result.data; // Return the actual profile data from the success response
+    } else {
+      throw new Error(result.error || 'Failed to fetch profile');
+    }
   } catch (error) {
     console.error("Error fetching profile:", error);
     throw error;

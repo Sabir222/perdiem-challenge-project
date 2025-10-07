@@ -1,5 +1,6 @@
 import { type NextFunction, type Request, type Response } from "express";
 import { ZodError, type ZodType } from "zod";
+import { sendError } from "../utils/responseHandler";
 
 export const validate =
   (schema: ZodType<any>) =>
@@ -13,23 +14,24 @@ export const validate =
       return next();
     } catch (error: any) {
       if (error instanceof ZodError) {
-        const errors = error.issues.map((issue) => ({
-          field: issue.path.join("."),
-          message: issue.message,
-        }));
-
-        return res.status(400).json({
-          error: "Validation failed",
-          details: errors,
-        });
+        const errorMessage = error.issues
+          .map((issue) => `${issue.path.join('.')}: ${issue.message}`)
+          .join(", ");
+        return sendError(
+          res,
+          "VALIDATION_ERROR",
+          "VALIDATION_ERROR",
+          400,
+          errorMessage,
+        );
       }
-
-      return res.status(400).json({
-        error: "Validation failed",
-        details: [
-          { field: "validation", message: error.message || "Invalid input" },
-        ],
-      });
+      return sendError(
+        res,
+        "VALIDATION_ERROR",
+        "VALIDATION_ERROR",
+        400,
+        error.message || "Invalid input",
+      );
     }
   };
 
