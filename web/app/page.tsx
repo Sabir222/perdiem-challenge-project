@@ -68,13 +68,20 @@ export default function Home() {
                                                         <div className="flex flex-col gap-4">
                                                                 <button
                                                                         onClick={() => window.location.href = 'http://a.localhost:3000'}
-                                                                        className="bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition text-lg font-medium shadow-md"
+                                                                        className="py-3 px-6 rounded-lg text-white font-medium shadow-md transition text-lg"
+                                                                        style={{ backgroundColor: '#3b82f6', borderColor: '#3b82f6' }} // Default theme color for store A
                                                                 >
                                                                         Go to Store A
                                                                 </button>
                                                                 <button
                                                                         onClick={() => window.location.href = 'http://b.localhost:3000'}
-                                                                        className="bg-gray-200 text-gray-800 py-3 px-6 rounded-lg hover:bg-gray-300 transition text-lg font-medium"
+                                                                        className="py-3 px-6 rounded-lg font-medium shadow-md transition text-lg"
+                                                                        style={{ 
+                                                                                backgroundColor: 'transparent',
+                                                                                color: '#3b82f6',
+                                                                                borderColor: '#3b82f6',
+                                                                                borderWidth: '1px'
+                                                                        }} // Default theme color for store B
                                                                 >
                                                                         Go to Store B
                                                                 </button>
@@ -114,7 +121,8 @@ export default function Home() {
                                         <p className="text-gray-600 mb-4">{error}</p>
                                         <button
                                                 onClick={() => window.location.reload()}
-                                                className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition"
+                                                className="py-2 px-4 rounded-lg text-white transition"
+                                                style={{ backgroundColor: themeColor, borderColor: themeColor }}
                                         >
                                                 Try Again
                                         </button>
@@ -139,19 +147,21 @@ export default function Home() {
                                         <div className="flex gap-2">
                                                 <button
                                                         onClick={() => window.location.href = 'http://a.localhost:3000'}
-                                                        className={`text-xs px-3 py-1.5 rounded-full font-medium transition ${window.location.hostname === 'a.localhost'
-                                                                ? 'bg-blue-600 text-white'
-                                                                : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
-                                                                }`}
+                                                        className="text-xs px-3 py-1.5 rounded-full font-medium transition"
+                                                        style={{
+                                                                backgroundColor: window.location.hostname === 'a.localhost' ? themeColor : '#e5e7eb',
+                                                                color: window.location.hostname === 'a.localhost' ? 'white' : '#374151'
+                                                        }}
                                                 >
                                                         Switch to A
                                                 </button>
                                                 <button
                                                         onClick={() => window.location.href = 'http://b.localhost:3000'}
-                                                        className={`text-xs px-3 py-1.5 rounded-full font-medium transition ${window.location.hostname === 'b.localhost'
-                                                                ? 'bg-blue-600 text-white'
-                                                                : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
-                                                                }`}
+                                                        className="text-xs px-3 py-1.5 rounded-full font-medium transition"
+                                                        style={{
+                                                                backgroundColor: window.location.hostname === 'b.localhost' ? themeColor : '#e5e7eb',
+                                                                color: window.location.hostname === 'b.localhost' ? 'white' : '#374151'
+                                                        }}
                                                 >
                                                         Switch to B
                                                 </button>
@@ -202,13 +212,20 @@ export default function Home() {
                                                         <div className="flex flex-col gap-4">
                                                                 <Link
                                                                         href="/login"
-                                                                        className="bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition font-medium shadow-md"
+                                                                        className="py-3 px-6 rounded-lg text-white font-medium shadow-md transition"
+                                                                        style={{ backgroundColor: themeColor, borderColor: themeColor }}
                                                                 >
                                                                         Login
                                                                 </Link>
                                                                 <Link
                                                                         href="/signup"
-                                                                        className="bg-gray-200 text-gray-800 py-3 px-6 rounded-lg hover:bg-gray-300 transition font-medium"
+                                                                        className="py-3 px-6 rounded-lg font-medium shadow-md transition"
+                                                                        style={{ 
+                                                                                backgroundColor: 'transparent',
+                                                                                color: themeColor,
+                                                                                borderColor: themeColor,
+                                                                                borderWidth: '1px'
+                                                                        }}
                                                                 >
                                                                         Create Account
                                                                 </Link>

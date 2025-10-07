@@ -93,7 +93,12 @@ export default function Profile() {
                                 <div className="flex justify-center">
                                         <Link
                                                 href="/"
-                                                className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm h-10 px-6"
+                                                className="rounded-full border border-solid transition-colors flex items-center justify-center font-medium text-sm h-10 px-6"
+                                                style={{ 
+                                                        backgroundColor: themeColor, 
+                                                        color: 'white',
+                                                        borderColor: themeColor
+                                                }}
                                         >
                                                 Back to Home
                                         </Link>

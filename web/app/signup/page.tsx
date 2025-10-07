@@ -85,7 +85,8 @@ export default function Signup() {
                                                         <button
                                                                 type="submit"
                                                                 disabled={loading}
-                                                                className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-md transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                                className="w-full py-3 px-4 text-white font-medium rounded-lg shadow-md transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                                style={{ backgroundColor: themeColor, borderColor: themeColor }}
                                                         >
                                                                 {loading ? 'Creating account...' : 'Create Account'}
                                                         </button>
@@ -94,12 +95,20 @@ export default function Signup() {
                                                 <div className="mt-6 text-center text-sm space-y-2">
                                                         <p className="text-gray-600">
                                                                 Already have an account?{' '}
-                                                                <Link href="/login" className="font-semibold text-blue-600 hover:text-blue-500 transition">
-                                                                Sign in
-                                                        </Link>
+                                                                <Link 
+                                                                        href="/login" 
+                                                                        className="font-semibold transition"
+                                                                        style={{ color: themeColor }}
+                                                                >
+                                                                        Sign in
+                                                                </Link>
                                                         </p>
                                                         <p className="text-gray-600">
-                                                                <Link href="/" className="font-semibold text-blue-600 hover:text-blue-500 transition">
+                                                                <Link 
+                                                                        href="/" 
+                                                                        className="font-semibold transition"
+                                                                        style={{ color: themeColor }}
+                                                                >
                                                                         &larr; Back to Home
                                                                 </Link>
                                                         </p>
