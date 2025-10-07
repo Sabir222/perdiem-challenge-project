@@ -8,7 +8,7 @@ The backend follows a layered architecture pattern:
 ┌─────────────────┐
 │   API Routes    │  HTTP handlers
 ├─────────────────┤
-│   Middleware    │  Subdomain extraction, auth
+│   Middleware    │  Subdomain extraction, auth, validation
 ├─────────────────┤
 │   Services      │  Business logic layer
 ├─────────────────┤
@@ -34,6 +34,11 @@ server/
 │   ├── middleware.ts            # Subdomain extraction middleware
 │   ├── auth.ts                  # JWT authentication middleware
 │   ├── services.ts              # Business logic layer
+│   ├── validation/              # Request validation schemas and middleware
+│   │   ├── index.ts             # Export file for validation utilities
+│   │   ├── middleware.ts        # Generic validation middleware
+│   │   ├── login.ts             # Login request validation schema
+│   │   └── signup.ts            # Signup request validation schema
 │   ├── utils/
 │   │   └── auth.ts              # JWT utility functions
 │   ├── db/
@@ -196,12 +201,13 @@ VALUES
 
 **Description**: Creates a new user in the current store
 **Headers**: Host header specifying subdomain
+**Validation**: Uses Zod schema for input validation
 **Body**:
 
 ```json
 {
   "email": "user@example.com",
-  "password": "securePassword123"
+  "password": "SecurePassword123!"
 }
 ```
 
@@ -219,18 +225,26 @@ VALUES
 }
 ```
 
-**Errors**: 400 (invalid input), 404 (store not found), 409 (email exists)
+**Validation Errors**: 
+- Email must be valid email format
+- Password must be at least 8 characters
+- Password must contain at least one number
+- Password must contain at least one uppercase letter
+- Password must contain at least one symbol
+
+**Other Errors**: 404 (store not found), 409 (email exists)
 
 #### `POST /login` - Authenticate User
 
 **Description**: Authenticates user and returns JWT token
 **Headers**: Host header specifying subdomain
+**Validation**: Uses Zod schema for input validation
 **Body**:
 
 ```json
 {
   "email": "user@example.com",
-  "password": "securePassword123"
+  "password": "SecurePassword123!"
 }
 ```
 
@@ -248,7 +262,11 @@ VALUES
 }
 ```
 
-**Errors**: 400 (invalid input), 401 (invalid credentials), 404 (store not found)
+**Validation Errors**: 
+- Email must be valid email format
+- Password must be at least 8 characters
+
+**Other Errors**: 401 (invalid credentials), 404 (store not found)
 
 ### Protected Endpoints
 
@@ -299,11 +317,24 @@ VALUES
 - **Storage**: Only hashed passwords stored in database
 - **Generation**: Performed during user creation and login verification
 
+### Input Validation
+
+- **Validation Library**: Zod for schema validation
+- **Validation Middleware**: Generic middleware for request validation
+- **Signup Validation**: 
+  - Email format validation
+  - Password minimum 8 characters
+  - Password must contain at least one number
+  - Password must contain at least one uppercase letter
+  - Password must contain at least one symbol
+- **Login Validation**: 
+  - Email format validation
+  - Password minimum 8 characters
+
 ### Authentication Security
 
 - **Token Expiration**: 24-hour lifetime to limit exposure
 - **Store Verification**: Ensures tokens match current store context
-- **Input Validation**: Email and password validation on public endpoints
 - **Error Handling**: Generic error messages to prevent information leakage
 
 ### Data Protection
