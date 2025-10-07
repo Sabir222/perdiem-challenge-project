@@ -8,7 +8,6 @@ import { User } from '@/lib/types';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Card from '@/app/components/Card';
-import Button from '@/app/components/Button';
 
 export default function Profile() {
         const [profile, setProfile] = useState<User | null>(null);

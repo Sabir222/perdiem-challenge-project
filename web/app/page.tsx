@@ -26,7 +26,6 @@ export default function Home() {
                                 setLoading(false); // Skip store info fetching if localhost
                         } else {
                                 setIsLocalhost(false);
-                                // Fetch store info for non-localhost
                                 const fetchStoreInfo = async () => {
                                         try {
                                                 const data = await getStoreInfo();
@@ -49,12 +48,12 @@ export default function Home() {
                 checkLocalhost();
         }, [setThemeColor]);
 
-        // localhost select store
+        // localhost select store (if local host we choose a store)
         if (isLocalhost) {
                 return (
                         <div className="surface py-16">
                                 <div className="text-center mb-8">
-                                        <h1 className="text-3xl font-bold">Welcome to Perdiemin</h1>
+                                        <h1 className="text-3xl font-bold">Welcome to Perdiemin challenge</h1>
                                         <p className="mt-2" style={{ color: 'var(--muted-foreground)' }}>Please select a store to continue</p>
                                 </div>
                                 <Card className="max-w-md mx-auto text-center">
