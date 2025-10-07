@@ -37,16 +37,16 @@ describe("Multi-Tenant Isolation", () => {
       .set("Host", "a.localhost:4000")
       .send({ email: "usera@test.com", password: "Password123!" });
 
-    storeAToken = signupA.body.token;
-    storeAUserId = signupA.body.user.id;
+    storeAToken = signupA.body.data.token;
+    storeAUserId = signupA.body.data.user.id;
 
     const signupB = await request(app)
       .post("/signup")
       .set("Host", "b.localhost:4000")
       .send({ email: "userb@test.com", password: "Password123!" });
 
-    storeBToken = signupB.body.token;
-    storeBUserId = signupB.body.user.id;
+    storeBToken = signupB.body.data.token;
+    storeBUserId = signupB.body.data.user.id;
   });
 
   afterAll(async () => {
@@ -83,8 +83,8 @@ describe("Multi-Tenant Isolation", () => {
       .set("Authorization", `Bearer ${storeAToken}`)
       .expect(200);
 
-    expect(responseA.body.id).toBe(storeAUserId);
-    expect(responseA.body.email).toBe("usera@test.com");
+    expect(responseA.body.data.id).toBe(storeAUserId);
+    expect(responseA.body.data.email).toBe("usera@test.com");
 
     const responseB = await request(app)
       .get("/profile")
@@ -92,8 +92,8 @@ describe("Multi-Tenant Isolation", () => {
       .set("Authorization", `Bearer ${storeBToken}`)
       .expect(200);
 
-    expect(responseB.body.id).toBe(storeBUserId);
-    expect(responseB.body.email).toBe("userb@test.com");
+    expect(responseB.body.data.id).toBe(storeBUserId);
+    expect(responseB.body.data.email).toBe("userb@test.com");
   });
 
   test("Token with manipulated storeId is rejected", async () => {
