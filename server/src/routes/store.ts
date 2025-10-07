@@ -15,13 +15,17 @@ router.get("/", async (req, res) => {
     return sendError(res, "Store not found", "STORE_NOT_FOUND", 404);
   }
 
-  return sendSuccess(res, {
-    id: req.currentStore.id,
-    name: req.currentStore.name,
-    slug: req.currentStore.slug,
-    welcome_message: req.currentStore.welcome_message,
-    theme: req.currentStore.theme,
-  }, "Store retrieved successfully");
+  return sendSuccess(
+    res,
+    {
+      id: req.currentStore.id,
+      name: req.currentStore.name,
+      slug: req.currentStore.slug,
+      welcome_message: req.currentStore.welcome_message,
+      theme: req.currentStore.theme,
+    },
+    "Store retrieved successfully",
+  );
 });
 
 router.post("/signup", validate(signupSchema), async (req, res) => {
@@ -40,14 +44,24 @@ router.post("/signup", validate(signupSchema), async (req, res) => {
 
     const token = generateToken(user.id, user.store_id);
 
-    return sendSuccess(res, {
-      token,
-      user: { id: user.id, email: user.email, store_id: user.store_id },
-    }, "User created successfully", 201);
+    return sendSuccess(
+      res,
+      {
+        token,
+        user: { id: user.id, email: user.email, store_id: user.store_id },
+      },
+      "User created successfully",
+      201,
+    );
   } catch (error: any) {
     //duplicate email error code
     if (error.code === "23505") {
-      return sendError(res, "Email already exists in this store", "EMAIL_EXISTS", 409);
+      return sendError(
+        res,
+        "Email already exists in this store",
+        "EMAIL_EXISTS",
+        409,
+      );
     }
     return sendError(res, "Failed to create user", "CREATE_USER_ERROR", 500);
   }
@@ -78,10 +92,14 @@ router.post("/login", validate(loginSchema), async (req, res) => {
 
     const token = generateToken(user.id, user.store_id);
 
-    return sendSuccess(res, {
-      token,
-      user: { id: user.id, email: user.email, store_id: user.store_id },
-    }, "Login successful");
+    return sendSuccess(
+      res,
+      {
+        token,
+        user: { id: user.id, email: user.email, store_id: user.store_id },
+      },
+      "Login successful",
+    );
   } catch (error) {
     return sendError(res, "Login failed", "LOGIN_ERROR", 500);
   }
@@ -99,13 +117,22 @@ router.get("/profile", authenticateUser, async (req, res) => {
       return sendError(res, "User not found", "USER_NOT_FOUND", 404);
     }
 
-    return sendSuccess(res, {
-      id: user.id,
-      email: user.email,
-      store_id: user.store_id,
-    }, "User profile retrieved successfully");
+    return sendSuccess(
+      res,
+      {
+        id: user.id,
+        email: user.email,
+        store_id: user.store_id,
+      },
+      "User profile retrieved successfully",
+    );
   } catch (error) {
-    return sendError(res, "Failed to fetch user profile", "FETCH_PROFILE_ERROR", 500);
+    return sendError(
+      res,
+      "Failed to fetch user profile",
+      "FETCH_PROFILE_ERROR",
+      500,
+    );
   }
 });
 

@@ -60,4 +60,3 @@ export const userService = {
     return result.rows.length ? result.rows[0] : null;
   },
 };
-
