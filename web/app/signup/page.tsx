@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '@/lib/contexts/AuthContext';
+import { useTheme } from '@/lib/contexts/ThemeContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
@@ -12,6 +13,7 @@ export default function Signup() {
         const [loading, setLoading] = useState(false);
 
         const { signup } = useAuth();
+        const { themeColor } = useTheme();
         const router = useRouter();
 
         const handleSubmit = async (e: React.FormEvent) => {
@@ -26,8 +28,9 @@ export default function Signup() {
                         } else {
                                 setError(result.error || 'Signup failed');
                         }
-                } catch (err) {
-                        setError('An error occurred during signup');
+                } catch (err: unknown) {
+                        const errorMessage = err instanceof Error ? err.message : 'An error occurred during signup';
+                        setError(errorMessage);
                 } finally {
                         setLoading(false);
                 }
@@ -35,8 +38,10 @@ export default function Signup() {
 
         return (
                 <div className="min-h-screen flex flex-col">
-                        {/* Theme banner - will be updated dynamically if we can access store theme */}
-                        <div className="h-3 w-full bg-blue-500"></div>
+                        <div 
+                                className="h-3 w-full" 
+                                style={{ backgroundColor: themeColor }}
+                        ></div>
                         
                         <div className="flex-grow flex items-center justify-center bg-gray-50 p-4">
                                 <div className="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden">
@@ -86,12 +91,17 @@ export default function Signup() {
                                                         </button>
                                                 </form>
 
-                                                <div className="mt-6 text-center text-sm">
+                                                <div className="mt-6 text-center text-sm space-y-2">
                                                         <p className="text-gray-600">
                                                                 Already have an account?{' '}
                                                                 <Link href="/login" className="font-semibold text-blue-600 hover:text-blue-500 transition">
                                                                 Sign in
                                                         </Link>
+                                                        </p>
+                                                        <p className="text-gray-600">
+                                                                <Link href="/" className="font-semibold text-blue-600 hover:text-blue-500 transition">
+                                                                        &larr; Back to Home
+                                                                </Link>
                                                         </p>
                                                 </div>
                                         </div>

@@ -2,16 +2,19 @@
 
 import { useState, useEffect } from 'react';
 import { getProfile } from '@/lib/api';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '@/lib/contexts/AuthContext';
+import { useTheme } from '@/lib/contexts/ThemeContext';
+import { User } from '@/lib/types';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 export default function Profile() {
-        const [profile, setProfile] = useState<any>(null);
+        const [profile, setProfile] = useState<User | null>(null);
         const [loading, setLoading] = useState(true);
         const [error, setError] = useState('');
 
         const { user, loading: authLoading } = useAuth();
+        const { themeColor } = useTheme();
         const router = useRouter();
 
         useEffect(() => {
@@ -59,8 +62,13 @@ export default function Profile() {
         }
 
         return (
-                <div className="font-sans min-h-screen p-8 pb-20 gap-16 sm:p-20">
-                        <main className="max-w-2xl mx-auto">
+                <div className="font-sans min-h-screen">
+                        <div 
+                                className="h-3 w-full" 
+                                style={{ backgroundColor: themeColor }}
+                        ></div>
+                        <div className="p-8 pb-20 gap-16 sm:p-20">
+                                <main className="max-w-2xl mx-auto">
                                 <h1 className="text-3xl font-bold mb-8 text-center">User Profile</h1>
 
                                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
@@ -92,5 +100,6 @@ export default function Profile() {
                                 </div>
                         </main>
                 </div>
+        </div>
         );
 }

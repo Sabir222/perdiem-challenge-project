@@ -2,12 +2,15 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { isAuthenticated, login as loginApi, signup as signupApi, logout as logoutApi, getProfile } from '@/lib/api';
+import { User } from '@/lib/types';
+
+import { AuthResponse } from '@/lib/types';
 
 type AuthContextType = {
-        user: any;
+        user: User | null;
         loading: boolean;
-        login: (email: string, password: string) => Promise<any>;
-        signup: (email: string, password: string) => Promise<any>;
+        login: (email: string, password: string) => Promise<AuthResponse>;
+        signup: (email: string, password: string) => Promise<AuthResponse>;
         logout: () => void;
         checkAuth: () => void;
 };
@@ -15,7 +18,7 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-        const [user, setUser] = useState<any>(null);
+        const [user, setUser] = useState<User | null>(null);
         const [loading, setLoading] = useState(true);
 
         useEffect(() => {
@@ -25,8 +28,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                                 try {
                                         const profile = await getProfile();
                                         setUser(profile);
-                                } catch (error) {
-                                        console.error('Auth check failed:', error);
+                                } catch {
+                                        console.error('Auth check failed:');
                                         logout();
                                 }
                         }
@@ -42,8 +45,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                                 const profile = await getProfile();
                                 setUser(profile);
                                 return true;
-                        } catch (error) {
-                                console.error('Auth check failed:', error);
+                        } catch {
+                                console.error('Auth check failed:');
                                 logout();
                                 return false;
                         }
@@ -54,14 +57,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const login = async (email: string, password: string) => {
                 try {
                         const result = await loginApi(email, password);
-                        if (result.success) {
+                        if (result.success && result.token) {
                                 localStorage.setItem('token', result.token);
-                                setUser(result.user);
-                                return { success: true, user: result.user };
+                                setUser(result.user || null);
+                                return { success: true, user: result.user || null };
                         } else {
                                 return { success: false, error: result.error || 'Login failed' };
                         }
-                } catch (error) {
+                } catch {
                         return { success: false, error: 'Network error' };
                 }
         };
@@ -69,14 +72,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const signup = async (email: string, password: string) => {
                 try {
                         const result = await signupApi(email, password);
-                        if (result.success) {
+                        if (result.success && result.token) {
                                 localStorage.setItem('token', result.token);
-                                setUser(result.user);
-                                return { success: true, user: result.user };
+                                setUser(result.user || null);
+                                return { success: true, user: result.user || null };
                         } else {
                                 return { success: false, error: result.error || 'Signup failed' };
                         }
-                } catch (error) {
+                } catch {
                         return { success: false, error: 'Network error' };
                 }
         };

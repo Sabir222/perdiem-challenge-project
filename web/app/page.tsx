@@ -2,12 +2,52 @@
 
 import { useState, useEffect } from 'react';
 import { getStoreInfo } from '@/lib/api';
-import { useAuth } from './context/AuthContext';
+import { useAuth } from '@/lib/contexts/AuthContext';
+import { useTheme } from '@/lib/contexts/ThemeContext';
+import { StoreInfo } from '@/lib/types';
 import Link from 'next/link';
 
 export default function Home() {
-        const isLocalhost = typeof window !== 'undefined' && window.location.hostname === 'localhost';
+        const [isLocalhost, setIsLocalhost] = useState(false);
+        const [storeInfo, setStoreInfo] = useState<StoreInfo | null>(null);
+        const [loading, setLoading] = useState(true);
+        const [error, setError] = useState<string | null>(null);
 
+        const { user, loading: authLoading, logout } = useAuth();
+        const { themeColor, setThemeColor } = useTheme();
+
+        useEffect(() => {
+                // Check if we're on localhost and update state
+                const checkLocalhost = () => {
+                        if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
+                                setIsLocalhost(true);
+                                setLoading(false); // Skip store info fetching if localhost
+                        } else {
+                                setIsLocalhost(false);
+                                // Fetch store info for non-localhost
+                                const fetchStoreInfo = async () => {
+                                        try {
+                                                const data = await getStoreInfo();
+                                                setStoreInfo(data);
+                                                if (data?.theme) {
+                                                        setThemeColor(data.theme);
+                                                }
+                                        } catch (err) {
+                                                setError('Failed to load store information');
+                                                console.error(err);
+                                        } finally {
+                                                setLoading(false);
+                                        }
+                                };
+
+                                fetchStoreInfo();
+                        }
+                };
+
+                checkLocalhost();
+        }, [setThemeColor]);
+
+        // localhost select store
         if (isLocalhost) {
                 return (
                         <div className="min-h-screen flex flex-col bg-gray-50">
@@ -50,29 +90,7 @@ export default function Home() {
                 );
         }
 
-        const [storeInfo, setStoreInfo] = useState<any>(null);
-        const [loading, setLoading] = useState(true);
-        const [error, setError] = useState<string | null>(null);
-
-        const { user, loading: authLoading, logout } = useAuth();
-
-        useEffect(() => {
-                const fetchStoreInfo = async () => {
-                        setLoading(true);
-                        try {
-                                const data = await getStoreInfo();
-                                setStoreInfo(data);
-                        } catch (err) {
-                                setError('Failed to load store information');
-                                console.error(err);
-                        } finally {
-                                setLoading(false);
-                        }
-                };
-
-                fetchStoreInfo();
-        }, []);
-
+        // loading
         if (loading) {
                 return (
                         <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
@@ -84,6 +102,7 @@ export default function Home() {
                 );
         }
 
+        // error
         if (error) {
                 return (
                         <div className="flex items-center justify-center min-h-screen bg-gray-50">
@@ -104,11 +123,12 @@ export default function Home() {
                 );
         }
 
+        // Main page 
         return (
                 <div className="min-h-screen flex flex-col bg-gray-50">
                         <div
                                 className="h-3 w-full"
-                                style={{ backgroundColor: storeInfo?.theme || '#3b82f6' }}
+                                style={{ backgroundColor: themeColor }}
                         ></div>
 
                         <div className="p-4 bg-white bg-opacity-90 backdrop-blur-sm border-b shadow-sm">
