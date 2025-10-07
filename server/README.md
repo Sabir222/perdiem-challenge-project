@@ -23,6 +23,7 @@ The backend follows a layered architecture pattern:
 - **Redis**: Caching layer for improved performance
 - **JWT**: Authentication token management
 - **bcrypt**: Password hashing
+- **helmet**: Security headers for HTTP responses
 
 ## Project Structure
 
