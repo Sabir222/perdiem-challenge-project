@@ -16,7 +16,7 @@ export const storeService = {
     if (result.rows.length) {
       await redisClient.setEx(
         `store:${slug}`,
-        3600,
+        300,
         JSON.stringify(result.rows[0]),
       );
       return result.rows[0];
