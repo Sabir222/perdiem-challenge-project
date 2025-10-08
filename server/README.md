@@ -287,6 +287,35 @@ VALUES
 
 **Errors**: 401 (unauthorized), 404 (user not found)
 
+#### `PUT /profile` - Update User Profile
+
+**Description**: Updates authenticated user's profile information
+**Headers**: Authorization: Bearer <token>
+**Validation**: Uses Zod schema for input validation
+**Body**:
+
+```json
+{
+  "email": "newemail@example.com"
+}
+```
+
+**Response**:
+
+```json
+{
+  "message": "User profile updated successfully",
+  "id": "uuid-string",
+  "email": "newemail@example.com",
+  "store_id": "store-uuid"
+}
+```
+
+**Validation Errors**: 
+- Email must be valid email format
+
+**Other Errors**: 401 (unauthorized), 404 (user not found), 409 (email exists in store)
+
 ## Caching Strategy
 
 ### Redis Implementation
@@ -298,17 +327,26 @@ VALUES
 ### Store Caching
 
 - **Key Pattern**: `store:<slug>` (e.g., `store:a`)
-- **TTL**: 1 hour (3600 seconds)
+- **TTL**: 5 minutes (300 seconds)
 - **Cache-Aside Pattern**:
   1. Check Redis cache first
   2. If not found, query database
   3. Store result in Redis for subsequent requests
 
+### User Caching
+
+- **Key Patterns**: 
+  - By ID: `user:<id>:<storeId>` (e.g., `user:uuid-123:store-uuid`)
+  - By email: `user:email:<email>:<storeId>` (e.g., `user:email:user@example.com:store-uuid`)
+- **TTL**: 5 minutes (300 seconds)
+- **Cache Strategy**: Stores user information without sensitive password field
+- **Invalidation**: Automatic on user updates and manual cache clearing when needed
+
 ### Cache Operations
 
 - **Read**: Before database query, check Redis
 - **Write**: After database insert/update, update cache
-- **Invalidation**: Automatically handled by TTL
+- **Invalidation**: Both automatic (TTL) and manual invalidation when necessary
 
 ## Security Measures
 
